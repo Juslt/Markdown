@@ -1,5 +1,5 @@
 package com.zzhoujay.markdown.method;
 
 public interface LinkClickEvent {
-    public void onClick(String url);
+    public void onClick(String url, CharSequence title);
 }

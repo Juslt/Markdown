@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import com.zzhoujay.markdown.MarkDown;
 import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.method.LongPressLinkMovementMethod;
-import com.zzhoujay.markdown.style.LongPressClickableSpan;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,7 +71,7 @@ public class MainActivity extends Activity {
                     }
                 }, mTextView, new LinkClickEvent() {
                     @Override
-                    public void onClick(String url) {
+                    public void onClick(String url, CharSequence title) {
                         Log.e("===",url);
                     }
                 });

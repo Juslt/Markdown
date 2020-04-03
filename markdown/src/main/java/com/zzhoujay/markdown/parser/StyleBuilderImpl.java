@@ -238,13 +238,13 @@ public class StyleBuilderImpl implements StyleBuilder {
     }
 
     @Override
-    public SpannableStringBuilder link(CharSequence title, final String link, String hint, final LinkClickEvent linkClickEvent) {
+    public SpannableStringBuilder link(final CharSequence title, final String link, String hint, final LinkClickEvent linkClickEvent) {
         SpannableStringBuilder builder = SpannableStringBuilder.valueOf(title);
         LinkSpan linkSpan = new LinkSpan(link, link_color){
             @Override
             public void onClick(View widget) {
                 if(linkClickEvent!=null){
-                    linkClickEvent.onClick(link);
+                    linkClickEvent.onClick(link,title);
                 }else{
                     super.onClick(widget);
                 }
