@@ -2,6 +2,8 @@ package com.zzhoujay.markdown.parser;
 
 import android.text.SpannableStringBuilder;
 
+import com.zzhoujay.markdown.method.LinkClickEvent;
+
 /**
  * Created by zhou on 16-6-28.
  * markdown各种样式的构建器
@@ -19,7 +21,7 @@ public interface StyleBuilder {
     SpannableStringBuilder email(CharSequence charSequence);
 
     SpannableStringBuilder link(CharSequence title, String link, String hint);
-
+    SpannableStringBuilder link(CharSequence title, String link, String hint, LinkClickEvent linkClickEvent);
     SpannableStringBuilder image(CharSequence title, String url, String hint);
 
     SpannableStringBuilder code(CharSequence charSequence);

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzhoujay.markdown.MarkDown;
+import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.method.LongPressLinkMovementMethod;
 import com.zzhoujay.markdown.style.LongPressClickableSpan;
 
@@ -70,7 +71,12 @@ public class MainActivity extends Activity {
                         }
                         return drawable;
                     }
-                }, mTextView);
+                }, mTextView, new LinkClickEvent() {
+                    @Override
+                    public void onClick(String url) {
+                        Log.e("===",url);
+                    }
+                });
                 long useTime = System.nanoTime() - time;
                 Toast.makeText(getApplicationContext(), "use time: " + useTime + "ns", Toast.LENGTH_LONG).show();
                 mTextView.setText(spanned);

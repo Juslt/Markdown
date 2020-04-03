@@ -4,6 +4,7 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.TextView;
 
+import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.parser.StyleBuilderImpl;
 
 import java.io.BufferedReader;
@@ -70,4 +71,60 @@ public class MarkDown {
         return null;
     }
 
+    /**
+     * 解析markdown文本,自定义link事件并返回spanned
+     *
+     * @param reader      BufferReader
+     * @param imageGetter 图片获取回调
+     * @param textView    textView
+     * @return spanned
+     */
+    public static Spanned fromMarkdown(BufferedReader reader, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
+        MarkDownParser parser = new MarkDownParser(reader, new StyleBuilderImpl(textView, imageGetter));
+        parser.setLinkClickEvent(linkClickEvent);
+        try {
+            return parser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析markdown,自定义link事件 文本并返回spanned
+     *
+     * @param source      源文本
+     * @param imageGetter 图片获取回调
+     * @param textView    textView
+     * @return spanned
+     */
+    public static Spanned fromMarkdown(String source, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
+        MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(textView, imageGetter));
+        parser.setLinkClickEvent(linkClickEvent);
+        try {
+            return parser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 解析markdown文本并返回spanned
+     *
+     * @param inputStream 输入流
+     * @param imageGetter 图片获取回调
+     * @param textView    textView
+     * @return spanned
+     */
+    public static Spanned fromMarkdown(InputStream inputStream, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
+        MarkDownParser parser = new MarkDownParser(inputStream, new StyleBuilderImpl(textView, imageGetter));
+        parser.setLinkClickEvent(linkClickEvent);
+        try {
+            return parser.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

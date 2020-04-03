@@ -4,6 +4,7 @@ import android.text.SpannableStringBuilder;
 import android.util.Pair;
 import android.util.SparseArray;
 
+import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.style.CodeSpan;
 
 import java.util.HashMap;
@@ -643,6 +644,23 @@ public class TagHandlerImpl implements TagHandler {
     }
 
     @Override
+    public boolean link(Line line, LinkClickEvent linkClickEvent) {
+        line = line.get();
+        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
+        Matcher matcher = obtain(Tag.LINK, builder);
+        if (matcher.find()) {
+            String title = matcher.group(2);
+            String link = matcher.group(3);
+            String hint = matcher.group(6);
+            builder.delete(matcher.start(1), matcher.end(1));
+            builder.insert(matcher.start(1), styleBuilder.link(title, link, hint,linkClickEvent));
+            link(line,linkClickEvent);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean link2(Line line) {
         line = line.get();
         SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
@@ -809,6 +827,22 @@ public class TagHandlerImpl implements TagHandler {
         flag = image(line) || flag;
         flag = image2(line) || flag;
         flag = link(line) || flag;
+        flag = link2(line) || flag;
+        flag = autoLink(line) || flag;
+        flag = emItalic(line) || flag;
+        flag = em(line) || flag;
+        flag = italic(line) || flag;
+        flag = delete(line) || flag;
+        return flag;
+    }
+
+    @Override
+    public boolean inline(Line line, LinkClickEvent linkClickEvent) {
+        boolean flag = code(line);
+        flag = email(line) || flag;
+        flag = image(line) || flag;
+        flag = image2(line) || flag;
+        flag = link(line,linkClickEvent) || flag;
         flag = link2(line) || flag;
         flag = autoLink(line) || flag;
         flag = emItalic(line) || flag;

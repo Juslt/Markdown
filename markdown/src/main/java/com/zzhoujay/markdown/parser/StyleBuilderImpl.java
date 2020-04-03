@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zzhoujay.markdown.R;
+import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.style.CodeBlockSpan;
 import com.zzhoujay.markdown.style.CodeSpan;
 import com.zzhoujay.markdown.style.EmailSpan;
@@ -76,7 +77,7 @@ public class StyleBuilderImpl implements StyleBuilder {
             quota_text_color = 0x61000000;
             code_text_color = 0xd8000000;
             code_background_color = 0x0c37474f;
-            link_color = 0xdc3e7bc9;
+            link_color = 0xff9DD300;
             h_under_line_color = 0x1837474f;
         } else {
             h1_text_color = a.getColor(R.styleable.MarkdownTheme_h1TextColor, 0);
@@ -232,6 +233,23 @@ public class StyleBuilderImpl implements StyleBuilder {
     public SpannableStringBuilder link(CharSequence title, String link, String hint) {
         SpannableStringBuilder builder = SpannableStringBuilder.valueOf(title);
         LinkSpan linkSpan = new LinkSpan(link, link_color);
+        builder.setSpan(linkSpan, 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return builder;
+    }
+
+    @Override
+    public SpannableStringBuilder link(CharSequence title, final String link, String hint, final LinkClickEvent linkClickEvent) {
+        SpannableStringBuilder builder = SpannableStringBuilder.valueOf(title);
+        LinkSpan linkSpan = new LinkSpan(link, link_color){
+            @Override
+            public void onClick(View widget) {
+                if(linkClickEvent!=null){
+                    linkClickEvent.onClick(link);
+                }else{
+                    super.onClick(widget);
+                }
+            }
+        };
         builder.setSpan(linkSpan, 0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return builder;
     }

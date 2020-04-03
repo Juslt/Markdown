@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 
+import com.zzhoujay.markdown.method.LinkClickEvent;
 import com.zzhoujay.markdown.parser.Line;
 import com.zzhoujay.markdown.parser.LineQueue;
 import com.zzhoujay.markdown.parser.QueueConsumer;
@@ -30,7 +31,7 @@ class MarkDownParser {
 
     private BufferedReader reader;
     private TagHandler tagHandler;
-
+    private LinkClickEvent linkClickEvent;
     MarkDownParser(BufferedReader reader, StyleBuilder styleBuilder) {
         this.reader = reader;
         tagHandler = new TagHandlerImpl(styleBuilder);
@@ -44,6 +45,9 @@ class MarkDownParser {
         this(new BufferedReader(new StringReader(text == null ? "" : text)), styleBuilder);
     }
 
+    public void setLinkClickEvent(LinkClickEvent linkClickEvent) {
+        this.linkClickEvent = linkClickEvent;
+    }
 
     public Spannable parse() throws IOException {
         LineQueue queue = collect();
@@ -126,7 +130,11 @@ class MarkDownParser {
                 continue;
             }
             queue.currLine().setStyle(SpannableStringBuilder.valueOf(queue.currLine().getSource()));
-            tagHandler.inline(queue.currLine());
+            if(linkClickEvent!=null){
+                tagHandler.inline(queue.currLine(),linkClickEvent);
+            }else{
+                tagHandler.inline(queue.currLine());
+            }
         } while (queue.next());
         return merge(queue);
     }

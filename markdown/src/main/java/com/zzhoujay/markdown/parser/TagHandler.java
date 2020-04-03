@@ -1,5 +1,7 @@
 package com.zzhoujay.markdown.parser;
 
+import com.zzhoujay.markdown.method.LinkClickEvent;
+
 /**
  * Created by zhou on 16-7-10.
  * TagHandler
@@ -43,6 +45,7 @@ public interface TagHandler extends TagFinder, QueueConsumer, TagGetter {
     boolean autoLink(Line line);
 
     boolean link(Line line);
+    boolean link(Line line,LinkClickEvent linkClickEvent);
 
     boolean link2(Line line);
 
@@ -55,6 +58,7 @@ public interface TagHandler extends TagFinder, QueueConsumer, TagGetter {
     boolean imageId(String line);
 
     boolean inline(Line line);
+    boolean inline(Line line, LinkClickEvent linkClickEvent);
 
     boolean codeBlock1(Line line);
 
