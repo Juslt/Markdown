@@ -97,12 +97,13 @@ public class TagHandlerImpl implements TagHandler {
     private QueueProvider queueProvider;
     private HashMap<String, Pair<String, String>> idLinkLinks;
     private HashMap<String, Pair<String, String>> idImageUrl;
+    private LinkClickEvent linkClickEvent;
 
-
-    public TagHandlerImpl(StyleBuilder styleBuilder) {
+    public TagHandlerImpl(StyleBuilder styleBuilder, LinkClickEvent linkClickEvent) {
         this.styleBuilder = styleBuilder;
         idImageUrl = new HashMap<>();
         idLinkLinks = new HashMap<>();
+        this.linkClickEvent = linkClickEvent;
     }
 
     @Override
@@ -612,7 +613,7 @@ public class TagHandlerImpl implements TagHandler {
     }
 
     @Override
-    public boolean autoLink(Line line) {
+    public boolean autoLink(Line line,LinkClickEvent linkClickEvent) {
         line = line.get();
         SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
         Matcher matcher = obtain(Tag.AUTO_LINK, builder);
@@ -620,27 +621,10 @@ public class TagHandlerImpl implements TagHandler {
         while (matcher.find()) {
             String content = matcher.group();
             builder.delete(matcher.start(), matcher.end());
-            builder.insert(matcher.start(), styleBuilder.link(content, content, ""));
+            builder.insert(matcher.start(), styleBuilder.link(content, content, "",linkClickEvent));
             m = true;
         }
         return m;
-    }
-
-    @Override
-    public boolean link(Line line) {
-        line = line.get();
-        SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
-        Matcher matcher = obtain(Tag.LINK, builder);
-        if (matcher.find()) {
-            String title = matcher.group(2);
-            String link = matcher.group(3);
-            String hint = matcher.group(6);
-            builder.delete(matcher.start(1), matcher.end(1));
-            builder.insert(matcher.start(1), styleBuilder.link(title, link, hint));
-            link(line);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -661,7 +645,7 @@ public class TagHandlerImpl implements TagHandler {
     }
 
     @Override
-    public boolean link2(Line line) {
+    public boolean link2(Line line, LinkClickEvent linkClickEvent) {
         line = line.get();
         SpannableStringBuilder builder = (SpannableStringBuilder) line.getStyle();
         Matcher matcher = obtain(Tag.LINK2, builder);
@@ -671,11 +655,11 @@ public class TagHandlerImpl implements TagHandler {
             Pair<String, String> link = idLinkLinks.get(id);
             if (link != null) {
                 builder.delete(matcher.start(1), matcher.end(1));
-                builder.insert(matcher.start(1), styleBuilder.link(title, link.first, link.second));
+                builder.insert(matcher.start(1), styleBuilder.link(title, link.first, link.second,linkClickEvent));
             } else {
                 return false;
             }
-            link2(line);
+            link2(line,linkClickEvent);
             return true;
         }
         return false;
@@ -826,25 +810,9 @@ public class TagHandlerImpl implements TagHandler {
         flag = email(line) || flag;
         flag = image(line) || flag;
         flag = image2(line) || flag;
-        flag = link(line) || flag;
-        flag = link2(line) || flag;
-        flag = autoLink(line) || flag;
-        flag = emItalic(line) || flag;
-        flag = em(line) || flag;
-        flag = italic(line) || flag;
-        flag = delete(line) || flag;
-        return flag;
-    }
-
-    @Override
-    public boolean inline(Line line, LinkClickEvent linkClickEvent) {
-        boolean flag = code(line);
-        flag = email(line) || flag;
-        flag = image(line) || flag;
-        flag = image2(line) || flag;
         flag = link(line,linkClickEvent) || flag;
-        flag = link2(line) || flag;
-        flag = autoLink(line) || flag;
+        flag = link2(line,linkClickEvent) || flag;
+        flag = autoLink(line,linkClickEvent) || flag;
         flag = emItalic(line) || flag;
         flag = em(line) || flag;
         flag = italic(line) || flag;

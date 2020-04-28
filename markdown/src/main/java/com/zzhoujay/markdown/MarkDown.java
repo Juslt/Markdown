@@ -80,8 +80,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(BufferedReader reader, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
-        MarkDownParser parser = new MarkDownParser(reader, new StyleBuilderImpl(textView, imageGetter));
-        parser.setLinkClickEvent(linkClickEvent);
+        MarkDownParser parser = new MarkDownParser(reader, new StyleBuilderImpl(textView, imageGetter),linkClickEvent);
         try {
             return parser.parse();
         } catch (IOException e) {
@@ -99,8 +98,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(String source, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
-        MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(textView, imageGetter));
-        parser.setLinkClickEvent(linkClickEvent);
+        MarkDownParser parser = new MarkDownParser(source, new StyleBuilderImpl(textView, imageGetter),linkClickEvent);
         try {
             return parser.parse();
         } catch (IOException e) {
@@ -118,8 +116,7 @@ public class MarkDown {
      * @return spanned
      */
     public static Spanned fromMarkdown(InputStream inputStream, Html.ImageGetter imageGetter, TextView textView, LinkClickEvent linkClickEvent) {
-        MarkDownParser parser = new MarkDownParser(inputStream, new StyleBuilderImpl(textView, imageGetter));
-        parser.setLinkClickEvent(linkClickEvent);
+        MarkDownParser parser = new MarkDownParser(inputStream, new StyleBuilderImpl(textView, imageGetter),linkClickEvent);
         try {
             return parser.parse();
         } catch (IOException e) {

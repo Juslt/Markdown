@@ -42,12 +42,11 @@ public interface TagHandler extends TagFinder, QueueConsumer, TagGetter {
 
     boolean delete(Line line);
 
-    boolean autoLink(Line line);
+    boolean autoLink(Line line,LinkClickEvent linkClickEvent);
 
-    boolean link(Line line);
     boolean link(Line line,LinkClickEvent linkClickEvent);
 
-    boolean link2(Line line);
+    boolean link2(Line line,LinkClickEvent linkClickEvent);
 
     boolean linkId(String line);
 
@@ -58,7 +57,6 @@ public interface TagHandler extends TagFinder, QueueConsumer, TagGetter {
     boolean imageId(String line);
 
     boolean inline(Line line);
-    boolean inline(Line line, LinkClickEvent linkClickEvent);
 
     boolean codeBlock1(Line line);
 

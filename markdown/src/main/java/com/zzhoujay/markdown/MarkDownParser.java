@@ -34,19 +34,25 @@ class MarkDownParser {
     private LinkClickEvent linkClickEvent;
     MarkDownParser(BufferedReader reader, StyleBuilder styleBuilder) {
         this.reader = reader;
-        tagHandler = new TagHandlerImpl(styleBuilder);
+        tagHandler = new TagHandlerImpl(styleBuilder,linkClickEvent);
     }
 
+    MarkDownParser(BufferedReader reader, StyleBuilder styleBuilder,LinkClickEvent linkClickEvent) {
+        this.reader = reader;
+        tagHandler = new TagHandlerImpl(styleBuilder,linkClickEvent);
+    }
     MarkDownParser(InputStream inputStream, StyleBuilder styleBuilder) {
         this(new BufferedReader(new InputStreamReader(inputStream)), styleBuilder);
+    }
+    MarkDownParser(InputStream inputStream, StyleBuilder styleBuilder,LinkClickEvent linkClickEvent) {
+        this(new BufferedReader(new InputStreamReader(inputStream)), styleBuilder,linkClickEvent);
     }
 
     MarkDownParser(String text, StyleBuilder styleBuilder) {
         this(new BufferedReader(new StringReader(text == null ? "" : text)), styleBuilder);
     }
-
-    public void setLinkClickEvent(LinkClickEvent linkClickEvent) {
-        this.linkClickEvent = linkClickEvent;
+    MarkDownParser(String text, StyleBuilder styleBuilder,LinkClickEvent linkClickEvent) {
+        this(new BufferedReader(new StringReader(text == null ? "" : text)), styleBuilder,linkClickEvent);
     }
 
     public Spannable parse() throws IOException {
@@ -130,11 +136,7 @@ class MarkDownParser {
                 continue;
             }
             queue.currLine().setStyle(SpannableStringBuilder.valueOf(queue.currLine().getSource()));
-            if(linkClickEvent!=null){
-                tagHandler.inline(queue.currLine(),linkClickEvent);
-            }else{
-                tagHandler.inline(queue.currLine());
-            }
+            tagHandler.inline(queue.currLine());
         } while (queue.next());
         return merge(queue);
     }
